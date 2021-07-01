@@ -1,3 +1,4 @@
+// imports and requirements
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
@@ -6,11 +7,14 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
+
+//  request methods
 app.get("/", function(req, res) {
   res.sendFile(__dirname + '/index.html');
 })
 
 app.post("/", function(req, res) {
+  // uses openweathermap.org for getting data using api call
   const query = req.body.location;
   const appid = "4d337ff3d2eccc21ff2750ca6dd086eb";
   const units = "metric";
@@ -18,6 +22,7 @@ app.post("/", function(req, res) {
   https.get(url, function(response) {
     response.on("data", function(data) {
       const dataJson = JSON.parse(data);
+      // if data is not received from api due to any reason
       if (dataJson.cod != 200 ){
         res.write("<h1> Opps! check the error</h1>");
         res.write(dataJson.message);
@@ -36,6 +41,7 @@ app.post("/", function(req, res) {
   })
 })
 
+//  app starts listening to port 3000
 app.listen(3000, function() {
   console.log("Server is running on port 3000");
 })
